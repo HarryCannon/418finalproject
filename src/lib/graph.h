@@ -1,10 +1,8 @@
-/*
- * NOTE: Code adapted and modified from 15-122
- */
 
 #ifndef GRAPH_H
 #define GRAPH_H
 
+typedef unsigned int vertex;
 typedef struct graph_edge edge;
 struct graph_edge {
 	unsigned int a;
@@ -13,6 +11,7 @@ struct graph_edge {
 
 typedef struct territory_node territory;
 struct territory_node {
+	vertex index;
 	unsigned int owner;
 	unsigned int numTroops;
 };
@@ -20,11 +19,11 @@ struct territory_node {
 typedef struct graph_header graph;
 struct graph_header {
 	unsigned int size;
+	unsigned int *territorySizes;
 	territory *territories;
-	unsigned int **topology;
+	vertex **topology;
 };
 
-typedef unsigned int vertex;
 typedef struct graph_header* graph_t;
 
 graph_t graph_new(unsigned int size, unsigned int numEdges, edge* edges);
@@ -33,6 +32,8 @@ void graph_free(graph_t G);
 
 unsigned int graph_size(graph_t G);
 
-void graph_getneighbors(graph_t G, vertex v, vertex* neighbors);
+vertex* graph_getneighbors(graph_t G, vertex v); //TODO: add filter here?
+
+territory* graph_makemove(graph_t G, move m);
 
 #endif
