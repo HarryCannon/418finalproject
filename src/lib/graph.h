@@ -34,17 +34,4 @@ unsigned int graph_size(graph_t G);
 
 vertex* graph_getneighbors(graph_t G, vertex v); //TODO: add filter here?
 
-/* int heuristic(graph_t G, territory* node, unsigned int player);
-
-territory*** graph_makemovespace(graph_t G, int depth, int maxMoves);
-
-void graph_freemovespace(graph_t G, int depth, int maxMoves);
-
-int graph_getmoves(graph_t G, territory* node, int currDepth, int*** moveSpace, unsigned int player, int turn);
-
-int alphabeta(territory* node, int currDepth, int maxDepth, int alpha, int beta, unsigned int player, int turn);
-
-territory* graph_makemove(graph_t G, move m, int depth, unsigned int player, int turn);
-*/
-
 #endif
