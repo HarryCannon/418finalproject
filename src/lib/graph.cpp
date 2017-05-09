@@ -101,6 +101,11 @@ void graph_modify_troops(territory* T, vertex v, int numTroops) {
 	T[v].numTroops += numTroops;
 }
 
+void graph_transfer_troops(territory* T, vertex src, vertex dest, int numTroops) {
+	T[src].numTroops -= numTroops;
+	T[dest].numTroops += numTroops;
+}
+
 void graph_applymove(territory* T, move* m) {
 	vertex atk = m->attacker;
 	vertex def = m->defender;
@@ -111,6 +116,10 @@ void graph_applymove(territory* T, move* m) {
 	}
 }
 
-void graph_setowner(territory* T, vertex v, player newOwner) {
+void graph_setowner(territory* T, vertex v, unsigned int newOwner) {
 	T[v].owner = newOwner;
+}
+
+unsigned int graph_getowner(territory* T, vertex v) {
+	return T[v].owner;
 }

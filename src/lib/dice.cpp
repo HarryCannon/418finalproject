@@ -143,9 +143,12 @@ move *multipleAttacks(int numAtk, int numDef, double threshold) {
     }
     if (defenders == 0) {
         result->success = true;
+				result->attackersLeft = attackers - 1;
+				result->defendersLeft = 1;
     } else {
         result->success = false;
+				result->attackersLeft = attackers;
+				result->defendersLeft = defenders;
     }
-    result->attackersLeft = attackers;
-    result->defendersLeft = defenders;
+		return result;
 }

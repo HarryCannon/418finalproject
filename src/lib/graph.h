@@ -1,9 +1,7 @@
-
 #ifndef GRAPH_H
 #define GRAPH_H
 
 typedef unsigned int vertex;
-typedef unsigned int player;
 
 typedef struct graph_edge edge;
 struct graph_edge {
@@ -14,7 +12,7 @@ struct graph_edge {
 typedef struct territory_node territory;
 struct territory_node {
 	vertex index;
-	player owner;
+	unsigned int owner;
 	unsigned int numTroops;
 };
 
@@ -38,7 +36,6 @@ struct single_move {
 
 
 typedef struct graph_header* graph_t;
-typedef unsigned int player;
 
 graph_t graph_new(unsigned int size, unsigned int numEdges, edge* edges);
 
@@ -54,8 +51,12 @@ void graph_print_territory(graph_t G, vertex v); //Prints all relevant info for 
 
 void graph_modify_troops(territory* T, vertex v, int numTroops);
 
+void graph_transfer_troops(territory* T, vertex src, vertex dest, int numTroops);
+
 void graph_applymove(territory* T, move* m);
 
-void graph_setowner(territory* T, vertex v, player newOwner);
+void graph_setowner(territory* T, vertex v, unsigned int newOwner);
+
+unsigned int graph_getowner(territory* T, vertex v);
 
 #endif

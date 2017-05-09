@@ -1,4 +1,4 @@
-#include "graph."
+#include "graph.h"
 
 #ifndef DICE_H
 #define DICE_H

@@ -20,5 +20,13 @@ int main() {
 
 	graph_print(G);
 
+	// Board is setup
+	// Begin game
+	
+	while(1) {
+
+
+	}	
+
 	return 0;
 }
