@@ -1,6 +1,6 @@
 #include "graph.h"
 #include <stdlib.h>
-
+#include <iostream>
 /*
  * Vars
  * size: the number of unique nodes
@@ -78,4 +78,39 @@ unsigned int graph_size(graph* G) {
 
 vertex* graph_getneighbors(graph* G, vertex v) {
 	return G->topology[v];
+}
+
+void graph_print(graph_t G) {
+	for (unsigned int i = 0; i < G->size; i++) {
+		graph_print_territory(G, i);
+	}
+}
+
+void graph_print_territory(graph_t G, vertex v) {
+	vertex* V = G->topology[v];
+	territory T = G->territories[v];
+	std::cout << "Vertex: " << T.index << " Owned by: " << T.owner << " Troops: " << T.numTroops << std::endl;
+	std::cout << "Neighbors: ";
+	for (int i = 0; i < G->territorySizes[v]; i++) {
+		std::cout << G->topology[v][i] << " ";
+	}
+	std::cout << std::endl << std::endl;;
+}
+
+void graph_modify_troops(territory* T, vertex v, int numTroops) {
+	T[v].numTroops += numTroops;
+}
+
+void graph_applymove(territory* T, move* m) {
+	vertex atk = m->attacker;
+	vertex def = m->defender;
+	T[atk].numTroops = m->attackersLeft;
+	T[def].numTroops = m->defendersLeft;
+	if (m->success) {
+		T[def].owner = T[atk].owner;
+	}
+}
+
+void graph_setowner(territory* T, vertex v, player newOwner) {
+	T[v].owner = newOwner;
 }

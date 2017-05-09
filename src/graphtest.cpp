@@ -11,5 +11,14 @@ int main() {
 
 	graph_t G = graph_new(4, 4, E);
 
+	graph_setowner(G->territories, 0, 1);
+	graph_setowner(G->territories, 1, 1);
+
+	for (int i = 0; i < 4; i++) {
+		graph_modify_troops(G->territories, i, 5);
+	}
+
+	graph_print(G);
+
 	return 0;
 }
