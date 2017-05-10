@@ -112,6 +112,7 @@ void graph_applymove(territory* T, move* m) {
 	T[atk].numTroops = m->attackersLeft;
 	T[def].numTroops = m->defendersLeft;
 	if (m->success) {
+		std::cout << "\tgraph_applymove: successful attack\n";
 		T[def].owner = T[atk].owner;
 	}
 }

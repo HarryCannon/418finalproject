@@ -40,10 +40,11 @@ int run_game(game_info* game) {
 	bool done = false;
 
 	while (!done) {
+		std::string temp;
+		std::getline(std::cin, temp); // So we can "step through" a game
+		if (temp == "q") return -1;
 		done = execute_move(game);
 		graph_print(game->board);
-		std::string temp;
-		std::getline(std::cin, temp);
 	}
 
 	return 0;

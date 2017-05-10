@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 
 double recurse(double** winprobs, double*** probs, int attackers, int defenders) {
     if (defenders == 0) {
@@ -150,5 +151,6 @@ move *multipleAttacks(int numAtk, int numDef, double threshold) {
 				result->attackersLeft = attackers;
 				result->defendersLeft = defenders;
     }
+		std::cout << "multipleAttacks (atk,def) left: (" << result->attackersLeft << "," << result->defendersLeft << ")\n"; 
 		return result;
 }
