@@ -5,3 +5,11 @@ player *new_player(bool isCPU) {
 	p->isCPU = isCPU;
 	return p;
 }
+
+void set_player_attacking_move(player* p, void (*atkFn)(game_info*)) {
+	p->attacking_move = atkFn;
+}
+
+void set_player_defending_move(player* p, void (*defFn)(game_info*)) {
+	p->defending_move = defFn;
+}

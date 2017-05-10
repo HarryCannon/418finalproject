@@ -1,3 +1,4 @@
+#include <cstddef>
 #ifndef GRAPH_H
 #define GRAPH_H
 
@@ -43,7 +44,7 @@ void graph_free(graph_t G);
 
 unsigned int graph_size(graph_t G);
 
-vertex* graph_getneighbors(graph_t G, vertex v); //TODO: add filter here?
+vertex* graph_getneighbors(graph_t G, vertex v); 
 
 void graph_print(graph_t G); //Prints all vertices
 

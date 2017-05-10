@@ -20,4 +20,6 @@ struct risk_game {
 // Return true if the game is over, false otherwise
 // Modifies the game_info struct in place
 bool execute_move(game_info* game);
+
+int run_game(game_info* game);
 #endif 

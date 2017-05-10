@@ -1,5 +1,10 @@
 #include "lib/graph.h"
+#include "game/game.h"
+#include "game/player.h"
+#include "ai/randomAI.h"
 #include <stdlib.h>
+#include <iostream>
+
 int main() {
 	// Make a ring graph of size 4
 	
@@ -21,12 +26,31 @@ int main() {
 	graph_print(G);
 
 	// Board is setup
-	// Begin game
+	// Setup players
+	player *p1 = new player();
+	p1->isCPU = true;
+	p1->attacking_move = &attack_random_ai;
 	
-	while(1) {
+	player *p2 = new player();
+	p2->isCPU = true;
+	p2->attacking_move = &attack_random_ai;
+	// Begin game
 
+	player *P = (player*)malloc(sizeof(player) * 2);
+	P[0] = *p1;
+	P[1] = *p2;
 
-	}	
+	game_info *game = new game_info();
+	game->numPlayers = 2;
+	game->players = P;
+	game->board = G;
+	game->turnCount = 0;
+	game->playerTurn = 0;
+	game->attackingTurn = true;
+
+	int winner = run_game(game);	
+
+	std::cout << "The winner is " << winner << std::endl;
 
 	return 0;
 }
