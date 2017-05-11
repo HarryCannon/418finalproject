@@ -21,5 +21,5 @@ struct risk_game {
 // Modifies the game_info struct in place
 bool execute_move(game_info* game);
 
-int run_game(game_info* game);
+int run_game(game_info* game, int granularity);
 #endif 
