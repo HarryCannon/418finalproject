@@ -21,8 +21,8 @@ int main() {
 	getBattleEndstates(10, 1, .5, &temp);
 	// Make a ring graph of size 4
 	srand(time(NULL));
-	int length = 5;
-	int width = 5;
+	int length = 4;
+	int width = 4;
 
 	graph_t G = grid_graph(length, width);
 
@@ -42,7 +42,7 @@ int main() {
 	// Setup players
 	player *p1 = new player();
 	p1->isCPU = true;
-	p1->attacking_move = &attack_sequential_ai;
+	p1->attacking_move = &attack_parallel_ai;
 	p1->defending_move = &defend_sequential_ai;
 	
 	player *p2 = new player();
@@ -54,6 +54,7 @@ int main() {
 	player *P = (player*)malloc(sizeof(player) * 2);
 	P[0] = *p1;
 	P[1] = *p2;
+	/*
 
 	player *p3 = new player();
 	p3->isCPU = true;
@@ -69,6 +70,7 @@ int main() {
 	player *P2 = (player*)malloc(sizeof(player) * 2);
 	P2[0] = *p3;
 	P2[1] = *p4;
+	*/
 
 	game_info *game1 = new game_info();
 	game1->numPlayers = 2;
@@ -78,10 +80,10 @@ int main() {
 	game1->playerTurn = 0;
 	game1->attackingTurn = true;
 
-	game_info *game2 = copy_game(game1);
-	game2->players = P2;
+	//game_info *game2 = copy_game(game1);
+	//game2->players = P2;
 
-	int winner = run_game(game1, game2);	
+	int winner = run_game(game1);	
 
 	std::cout << "The winner is " << winner << std::endl;
 

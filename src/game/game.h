@@ -23,5 +23,5 @@ game_info* copy_game(game_info* game);
 // Modifies the game_info struct in place
 bool execute_move(game_info* game);
 
-int run_game(game_info* game1, game_info* game2);
+int run_game(game_info* game);
 #endif 

@@ -319,7 +319,7 @@ void attack_sequential_ai(game_info* game) {
 
 	for (int i = 0; i < MAXBATTLES; i++) {
 		//double alphabeta(game_info* game, double alpha, double beta, battle* b, int battleCount, int maxBattles, int maxTurn, unsigned int player, battle* rootBattle = NULL)
-		double v = alphabeta(game, 0.0, (double)game->board->size, NULL, i, MAXBATTLES, game->turnCount + TURNDEPTH, game->playerTurn, &b);
+		double v = alphabeta(game, 0.0, (double)game->board->size, NULL, i, MAXBATTLES, game->turnCount + (TURNDEPTH / 2), game->playerTurn, &b);
 		printf("Left alpha beta, chose battle: attacker: %d, defender: %d, with value %f\n", b.attacker, b.defender, v);
 		if (b.attacker == -1) {
 			break;

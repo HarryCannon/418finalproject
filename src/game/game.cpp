@@ -56,7 +56,7 @@ bool execute_move(game_info* game) {
 	return false;
 }
 
-int run_game(game_info* game1, game_info* game2) {
+int run_game(game_info* game) {
 
 	bool done = false;
 
@@ -65,17 +65,17 @@ int run_game(game_info* game1, game_info* game2) {
 		std::getline(std::cin, temp); // So we can "step through" a game
 		if (temp == "q") return -1;
 		auto t1 = std::chrono::high_resolution_clock::now();
-		done = execute_move(game2);
+		done = execute_move(game);
 		auto t2 = std::chrono::high_resolution_clock::now();
 		int time1 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
 		std::cout << std::endl << time1<< " milliseconds." << std:: endl;
-		t1 = std::chrono::high_resolution_clock::now();
-		done = execute_move(game1);
-		t2 = std::chrono::high_resolution_clock::now();
-		int time2 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-		std::cout << std::endl << time2<< " milliseconds." << std::endl;
-		std::cout << std::endl << "speedup: " <<  ((double)time2/(double)time1) << std::endl;
-		//graph_printgrid(game1->board, 3, 3);
+		//t1 = std::chrono::high_resolution_clock::now();
+		//done = execute_move(game1);
+		//t2 = std::chrono::high_resolution_clock::now();
+		//int time2 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+		//std::cout << std::endl << time2<< " milliseconds." << std::endl;
+		//std::cout << std::endl << "speedup: " <<  ((double)time2/(double)time1) << std::endl;
+		graph_printgrid(game->board, 4, 4);
 	}
 
 	return 0;
