@@ -10,16 +10,19 @@ We developed and parallelized a Risk AI using an expectiminimax game tree with a
 
 #### Key data structures
 
-The main data structure is the risk_game.
+The main data structure is the `risk_game`, which includes the `board`, `player`s, and other meta-information needed to play the game, such as turn count, whose turn it is, etc. The `player` data structure simply keeps track of the AI's stats, such as how aggressive they are, what heuristics they use to play, and what version of our algorithms they use. The most interesting structure is the `board`, which contains the topology of the risk board as well as the current state of play. The current state includes who owns which territories, as well as how many troops are each position. The `graph` data structure is responsible for keeping track of all of these operations, and we built a solid library to make these operations as quick and efficient as possible. This also allowed us to iterate quickly on strategies since all the helper functions were already built.
 
 #### Key operations on these data structures
 
-#### Algorithm Inputs and Outputs 
+The most important operation is the `execute_move` operation on a `risk_game`, which takes the game from Player i's turn to Player i+1. The game runner simply calls on the function pointer passed to it by the player which modifies the `board` structure in place, after the player AI calculates the best moves to take. Other than this, most data structures never or infrequently change, such as the strategies of each `player` for example. 
 
 #### What is the part that computationally expensive and could benefit from parallelization?
 
+Given that the `graph` functions are as efficient as can be, the main part that benefits of parallelization is the calculation of the best moves to make. Because the game tree has a very high branching factor, from every given game state there are dozens if not hundreds of different direct children. So not only do we want to evaluate these child nodes in parallel, but ideally we would only explore the children states worth exploring. This is the main part of our project that we parallelized. 
+
 #### Workload Features
 Break down the workload. Where are the dependencies in the program? How much parallelism is there? Is it data-parallel? Where is the locality? Is it amenable to SIMD execution?
+Given any game state in the tree, we can call this the root and it is entirely independent of any of its parents. That is to say, given that we have arrived at a certain state of play, it does not matter how we got there. There are no dependencies between children of the same node, so the game tree can be viewed as a DAG of dependencies. There is a lot of parallelism in this approach because we can map over the children independently, however doing this naively leads to a lot of wasted computation. This is why we used alpha-beta pruning in order to prune off game branches that are not fruitful. Because each game state needs its own memory, there is no data-parallelism in the main game tree branching. However, in calculating the value of the game in each state, there is data-parallelism. However because boards tend to be very small, usually with less than 50 territories, there is not a lot of potential for parallelism because of the overhead of spinning up new threads. In the future this part could be augmented with SIMD execution however.
 
 ### Approach
 
