@@ -86,6 +86,23 @@ void graph_print(graph_t G) {
 	}
 }
 
+void graph_printgrid(graph_t G, int length, int width) {
+	for (int i = 0; i < length; i++) {
+		for (int j = 0; j < width; j++) {
+			int node = i*length + j;
+			territory terr = G->territories[node];
+			if (terr.owner == 0) {
+				std::cout << " " << terr.numTroops << " ";
+			}
+			else 
+			{
+				std::cout << "-" << terr.numTroops << " ";
+			}
+		}
+		std::cout << std::endl;
+	}
+}
+
 void graph_print_territory(graph_t G, vertex v) {
 	vertex* V = G->topology[v];
 	territory T = G->territories[v];
@@ -123,4 +140,21 @@ void graph_setowner(territory* T, vertex v, unsigned int newOwner) {
 
 unsigned int graph_getowner(territory* T, vertex v) {
 	return T[v].owner;
+}
+
+graph_t graph_copy(graph_t G) {
+	graph_t ret = (graph*)malloc(sizeof(graph));
+	ret->size = G->size;
+	ret->territorySizes = (unsigned int*)calloc(G->size,sizeof(unsigned int));
+	ret->topology = (vertex**)malloc(G->size * sizeof(vertex*));
+	ret->territories = (territory*)calloc(G->size, sizeof(territory));
+	for (int i = 0; i < G->size; i++) {
+		ret->territories[i] = G->territories[i];
+		ret->territorySizes[i] = G->territorySizes[i];
+		ret->topology[i] = (vertex*)malloc(G->territorySizes[i] *sizeof(vertex));
+		for (int j = 0; j < G->territorySizes[i]; j++) {
+			ret->topology[i][j] = G->topology[i][j];
+		}
+	}
+	return ret;
 }

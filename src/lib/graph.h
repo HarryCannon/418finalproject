@@ -48,6 +48,8 @@ vertex* graph_getneighbors(graph_t G, vertex v);
 
 void graph_print(graph_t G); //Prints all vertices
 
+void graph_printgrid(graph_t G, int length, int width);
+
 void graph_print_territory(graph_t G, vertex v); //Prints all relevant info for a vertex
 
 void graph_modify_troops(territory* T, vertex v, int numTroops);
@@ -59,5 +61,7 @@ void graph_applymove(territory* T, move* m);
 void graph_setowner(territory* T, vertex v, unsigned int newOwner);
 
 unsigned int graph_getowner(territory* T, vertex v);
+
+graph_t graph_copy(graph_t G);
 
 #endif

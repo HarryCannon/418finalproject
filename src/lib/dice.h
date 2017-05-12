@@ -3,6 +3,15 @@
 #ifndef DICE_H
 #define DICE_H
 
+typedef struct battleEndstate endstate;
+struct battleEndstate {
+	int attackers;
+    int defenders;
+    double probability;
+};
+
+endstate* getBattleEndstates(int attackers, int defenders, double threshold, int* size);
+
 double getProbabilityOfSuccess(int attackers, int defenders);
 
 // 1 <= numDef <= 3

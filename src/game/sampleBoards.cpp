@@ -12,7 +12,8 @@ graph_t ring_graph(unsigned int size) {
 
 graph_t grid_graph(unsigned int length, unsigned int width) {
 	unsigned int size = length * width;
-	edge* E = (edge*)malloc(sizeof(struct graph_edge) * size);
+	unsigned int edgeSize = 2*size - (length + width);
+	edge* E = (edge*)malloc(sizeof(struct graph_edge) * edgeSize);
 
 	int edgeI = 0;
 	for (unsigned int i = 0; i < length; i++) {
@@ -38,5 +39,5 @@ graph_t grid_graph(unsigned int length, unsigned int width) {
 	}
 
 
-	return graph_new(size, size, E);
+	return graph_new(size, edgeSize, E);
 }

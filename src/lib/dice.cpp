@@ -3,6 +3,65 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <stdio.h>
+
+double** successProbs = 0;
+int** battleEndstatesSizes = 0;
+endstate*** battleEndstates = 0;
+
+endstate* getBattleEndstates(int attackers, int defenders, double threshold, int* size) {
+    if (battleEndstatesSizes == 0) {
+        battleEndstatesSizes = new int*[21];
+        for (int i = 0; i < 21; i++) {
+            battleEndstatesSizes[i] = new int[21];
+        }
+        battleEndstates = new endstate**[21];
+        for (int i = 0; i < 21; i++) {
+            battleEndstates[i] = new endstate*[21];
+        }
+
+        std::ifstream inputFile;
+        //printf("opening endstates.txt\n");
+        inputFile.open("endstates.txt");
+
+        int attackers = -1;
+        int defenders = -1;
+        int size = -1;
+
+        int attackers2 = -1;
+        int defenders2 = -1;
+        double probability = -1.0;
+
+        while (!inputFile.eof()) {
+            inputFile >> attackers;
+            inputFile >> defenders;
+            inputFile >> size;
+            //printf("attackers: %d, defenders: %d, size: %d\n", attackers, defenders, size);
+
+            battleEndstatesSizes[attackers][defenders] = size;
+            battleEndstates[attackers][defenders] = new endstate[size];
+
+            for (int i = 0; i < size; i++) {
+                inputFile >> attackers2;
+                inputFile >> defenders2;
+                inputFile >> probability;
+                //printf("\tattackers: %d, defenders: %d, probability: %f\n", attackers2, defenders2, probability);
+                endstate e;
+                e.attackers = attackers2;
+                e.defenders = defenders2;
+                e.probability = probability;
+                battleEndstates[attackers][defenders][i] = e;
+            }
+        }
+        
+        inputFile.close();
+        //printf("closed endstates.txt\n");
+    }
+
+    *size = battleEndstatesSizes[attackers][defenders];
+    return battleEndstates[attackers][defenders];
+}
 
 double recurse(double** winprobs, double*** probs, int attackers, int defenders) {
     if (defenders == 0) {
@@ -28,6 +87,18 @@ double recurse(double** winprobs, double*** probs, int attackers, int defenders)
     return ret;
 }
 double getProbabilityOfSuccess(int attackers, int defenders) {
+    if (successProbs == 0) {
+        successProbs = new double*[21];
+        for (int i = 0; i < 21; i++) {
+            successProbs[i] = new double[21];
+            for (int j = 0; j < 21; j++) {
+                successProbs[i][j] = -1.0;
+            }
+        }
+    }
+    if (successProbs[attackers][defenders] >= 0.0) {
+        return successProbs[attackers][defenders];
+    }
     //I was too lazy to write the code to compute this
     double*** probs = new double**[3];
     for (int i = 0; i < 3; i++) {
@@ -94,6 +165,8 @@ double getProbabilityOfSuccess(int attackers, int defenders) {
         delete [] winprobs[i];
     }
     delete [] winprobs;
+
+    successProbs[attackers][defenders] = ret;
 
     return ret;
 }
