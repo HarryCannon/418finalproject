@@ -4,7 +4,7 @@
 # Final Report
 
 ### Summary
-We developed and parallelized a Risk AI using an expectiminimax game tree with alpha-beta pruning. We used OpenMP and wrote in C++ to target the GHC machines.
+We developed and parallelized a Risk AI using an expectiminimax game tree with alpha-beta pruning. We parallelized using OpenMP and wrote in C++11 to target the GHC machines.
 
 ### Background
 
@@ -21,10 +21,25 @@ The most important operation is the `execute_move` operation on a `risk_game`, w
 Given that the `graph` functions are as efficient as can be, the main part that benefits of parallelization is the calculation of the best moves to make. Because the game tree has a very high branching factor, from every given game state there are dozens if not hundreds of different direct children. So not only do we want to evaluate these child nodes in parallel, but ideally we would only explore the children states worth exploring. This is the main part of our project that we parallelized. 
 
 #### Workload Features
-Break down the workload. Where are the dependencies in the program? How much parallelism is there? Is it data-parallel? Where is the locality? Is it amenable to SIMD execution?
 Given any game state in the tree, we can call this the root and it is entirely independent of any of its parents. That is to say, given that we have arrived at a certain state of play, it does not matter how we got there. There are no dependencies between children of the same node, so the game tree can be viewed as a DAG of dependencies. There is a lot of parallelism in this approach because we can map over the children independently, however doing this naively leads to a lot of wasted computation. This is why we used alpha-beta pruning in order to prune off game branches that are not fruitful. Because each game state needs its own memory, there is no data-parallelism in the main game tree branching. However, in calculating the value of the game in each state, there is data-parallelism. However because boards tend to be very small, usually with less than 50 territories, there is not a lot of potential for parallelism because of the overhead of spinning up new threads. In the future this part could be augmented with SIMD execution however.
 
 ### Approach
+
+#### Overview
+We wanted full control over our Risk AI, so we started by first building the game from scratch. Both of us have been playing Risk intensely for 3 years, so we worked to apply and quantify our domain knowledge to build an initial sequential AI. After we were satisfied, we then sought to parallelize the AI. 
+
+#### Sequential AI
+Our sequential AI works by applying a heuristic function to game states in order to generate the value of that board. The heuristic we chose was troop production capability, which happens to be directly proportional to the number of territories a player owns. Our heuristic also takes into account the odds that the player will be able to keep the territories they gain, weighted probabilisticaly.
+
+#### Tools and Technologies
+We wrote the entirety of our program in C++11 and used OpenMP for the parallelism. We targeted the GHC machines.
+
+#### Going From Sequential to Parallel AI
+Describe how you mapped the problem to your target parallel machine(s). IMPORTANT: How do the data structures and operations you described in part 2 map to machine concepts like cores and threads. (or warps, thread blocks, gangs, etc.)
+
+Did you change the original serial algorithm to enable better mapping to a parallel machine?
+
+If your project involved many iterations of optimization, please describe this process as well. What did you try that did not work? How did you arrive at your solution? The notes you've been writing throughout your project should be helpful here. Convince us you worked hard to arrive at a good solution.
 
 ### Results
 
