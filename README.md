@@ -1,6 +1,37 @@
 # Parallel Risk AI
 ## By Felipe Archondo, Harry Cannon
 
+# Final Report
+
+### Summary
+We developed and parallelized a Risk AI using an expectiminimax game tree with alpha-beta pruning. We used OpenMP and wrote in C++ to target the GHC machines.
+
+### Background
+
+#### Key data structures
+
+The main data structure is the risk_game.
+
+#### Key operations on these data structures
+
+#### Algorithm Inputs and Outputs 
+
+#### What is the part that computationally expensive and could benefit from parallelization?
+
+#### Workload Features
+Break down the workload. Where are the dependencies in the program? How much parallelism is there? Is it data-parallel? Where is the locality? Is it amenable to SIMD execution?
+
+### Approach
+
+### Results
+
+### References
+
+### Division of Work
+Work was completed evenly by both team members.
+
+# Proposal/Checkpoint
+
 ### Summary
 
 We are going to implement a sequential Risk AI with minimax/alpha-beta pruning and then parallelize it on the GHC machines with pthreads in C++. We will measure increases in speedup in the parallel AI as well as it's winrate against the sequential AI.
