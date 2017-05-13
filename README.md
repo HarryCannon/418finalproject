@@ -21,7 +21,7 @@ The most important operation is the `execute_move` operation on a `risk_game`, w
 Given that the `graph` functions are as efficient as can be, the main part that benefits of parallelization is the calculation of the best moves to make. Because the game tree has a very high branching factor, from every given game state there are dozens if not hundreds of different direct children. So not only do we want to evaluate these child nodes in parallel, but ideally we would only explore the children states worth exploring. This is the main part of our project that we parallelized. 
 
 #### Workload Features
-Given any game state in the tree, we can call this the root and it is entirely independent of any of its parents. That is to say, given that we have arrived at a certain state of play, it does not matter how we got there. There are no dependencies between children of the same node, so the game tree can be viewed as a DAG of dependencies. There is a lot of parallelism in this approach because we can map over the children independently, however doing this naively leads to a lot of wasted computation. This is why we used alpha-beta pruning in order to prune off game branches that are not fruitful. Because each game state needs its own memory, there is no data-parallelism in the main game tree branching. However, in calculating the value of the game in each state, there is data-parallelism. However because boards tend to be very small, usually with less than 50 territories, there is not a lot of potential for parallelism because of the overhead of spinning up new threads. In the future this part could be augmented with SIMD execution however.
+Given any game state in the tree, we can call this the root and it is entirely independent of any of its parents. That is to say, given that we have arrived at a certain state of play, it does not matter how we got there. There are no dependencies between children of the same node, so the game tree can be viewed as a DAG of dependencies. There is a lot of parallelism in this approach because we can map over the children independently, however doing this naively leads to a lot of wasted computation. This is why we used alpha-beta pruning in order to prune off game branches that are not fruitful. Because each game state needs its own memory, there is no data-parallelism in the main game tree branching.
 
 ### Approach
 
@@ -29,7 +29,13 @@ Given any game state in the tree, we can call this the root and it is entirely i
 We wanted full control over our Risk AI, so we started by first building the game from scratch. Both of us have been playing Risk intensely for 3 years, so we worked to apply and quantify our domain knowledge to build an initial sequential AI. After we were satisfied, we then sought to parallelize the AI. 
 
 #### Sequential AI
-Our sequential AI works by applying a heuristic function to game states in order to generate the value of that board. The heuristic we chose was troop production capability, which happens to be directly proportional to the number of territories a player owns. Our heuristic also takes into account the odds that the player will be able to keep the territories they gain, weighted probabilisticaly.
+Our sequential AI is essentially minimax with alpha beta pruning. In addition to min and max nodes as in standard minimax, our game tree also contains what are called chance nodes, whose value is a weighted sum of the values of their children, where the weight of a child is the probability of the corresponding outcome occuring. We specifically use this to model battles between territories, which have multiple possible outcomes which are determined probabilistically by dice rolls. The heuristic function we use is simply the number of territories owned by the max player, and the depth we use for minimax evaluation is 4 attacking turns.
+
+To make our AI more computationally tractable we made the following simplifications:
+    Only model 2 player Risk
+    Players can only attack once per turn
+    The reinforcing strategy is fixed, specifically it evenly distributes reinforcements among territories that border enemy territories
+    Once a player decides to attack a territory, they continue doing so until they win, lose, or they are less likely to win than lose
 
 #### Tools and Technologies
 We wrote the entirety of our program in C++11 and used OpenMP for the parallelism. We targeted the GHC machines.
@@ -37,9 +43,7 @@ We wrote the entirety of our program in C++11 and used OpenMP for the parallelis
 #### Going From Sequential to Parallel AI
 Describe how you mapped the problem to your target parallel machine(s). IMPORTANT: How do the data structures and operations you described in part 2 map to machine concepts like cores and threads. (or warps, thread blocks, gangs, etc.)
 
-Did you change the original serial algorithm to enable better mapping to a parallel machine?
-
-If your project involved many iterations of optimization, please describe this process as well. What did you try that did not work? How did you arrive at your solution? The notes you've been writing throughout your project should be helpful here. Convince us you worked hard to arrive at a good solution.
+We mapped our problem to the GHC machines by evaluating the game tree root's child nodes in parallel. Specifically each node is evaluated by a thread. In order to avoid nasty memory errors, we provide a duplicate of the game state for each child node to use. We didn't make any changes to our sequential algorithm in order to make it more parallelizable. Our first strategy was to simply provide the trivial (alpha, beta) values (i.e. (heuristic min, heuristic max)) to each child node when we evaluate it. We improved on this approach by allowing nodes that started to be evaluated later to use (alpha, beta) values based on the values of nodes that have already been evaluated. This allows the child nodes to be pruned faster and reduces redundant computation.
 
 ### Results
 
@@ -77,9 +81,6 @@ There is a lot of room for improvement but it requires a more complex implementa
 #### Target machine
 
 We believe our choice target machine was sound. In particular GPUs are well-suited for en masse parallelization of many tasks, but the parent-child node dependencies inherent to minimax make mapping it to a GPU in this manner quite difficult.
-
-
-### References
 
 ### Division of Work
 Work was completed evenly by both team members.
