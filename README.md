@@ -50,13 +50,13 @@ We tested three AI, a baseline sequential AI, and two parallelized versions of i
 #### Speedup graphs
 Below is the speedup graph across board sizes for Parallel AI 1, i.e. evaluating the children of the game tree's root node in parallel with initial (alpha, beta) for each child simply being (minimum heuristic value, maximum heuristic value).
 
-![alt text](https://github.com/HarryCannon/418finalproject/images/speedup1.png "Parallel AI 1 Speedup Graph")
+![alt text](https://github.com/HarryCannon/418finalproject/blob/master/images/speedup1.png "Parallel AI 1 Speedup Graph")
 
 It's important to consider the board size as there is greater speedup potential for larger boards. This is because the game tree has a higher branching factor on larger boards (more battles are possible, each battle has more possible outcomes, etc.). In particular this parallel AI is only modestly faster than the sequential AI on 3 by 3 boards, but has 2.54x speedup on 5 by 5 boards.
 
 Below is the speedup graph across board sizes for Parallel AI 2, i.e. evaluating the children of the game tree's root node in parallel, but allowing later iterations to have alpha beta values based on the values of children of the root node we've explored already.
 
-![alt text](https://github.com/HarryCannon/418finalproject/images/speedup2.png "Parallel AI 2 Speedup Graph")
+![alt text](https://github.com/HarryCannon/418finalproject/blob/master/images/speedup2.png "Parallel AI 2 Speedup Graph")
 
 Problem size is of importance here as well. In particular for 3 by 3 boards our two parallel AI's have very similar performance, but Parallel AI 2 dwarfs Parallel AI 1 on larger boards, getting near 4x speedup on 5 by 5 boards. We save a lot of computation time by passing updated alpha beta values to later root child node iterations, as we can prune nodes quicker. 
 
@@ -68,7 +68,7 @@ In profiling our implementation, the first thing we noted is that even on 5 by 5
 
 Another key problem we noted was work imbalance. We measured how long it took the sequential algorithm to evaluate each of the root children in it's game tree and there was often a wild imbalance, an example printout from our profiling is shown below. Note iteration i simply corresponds to evaluating the ith child of the game tree root, and these iterations are the basic components of our algorithm.
 
-![alt text](https://github.com/HarryCannon/418finalproject/images/imbalance.png "Minimax workload imbalance")
+![alt text](https://github.com/HarryCannon/418finalproject/blob/master/images/imbalance.png "Minimax workload imbalance")
 
 Here iteration 1 accounts for 29.5% of the total evaluation time! And note our implementation works at the granularity of these iterations, i.e. they aren't parallelized. So by Amdahl's law our max speedup under our implementation for this example is 1/.295 = 3.39x, which is actually below average in terms of our implementation's performance.
 
