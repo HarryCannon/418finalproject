@@ -32,10 +32,11 @@ We wanted full control over our Risk AI, so we started by first building the gam
 Our sequential AI is essentially minimax with alpha beta pruning. In addition to min and max nodes as in standard minimax, our game tree also contains what are called chance nodes, whose value is a weighted sum of the values of their children, where the weight of a child is the probability of the corresponding outcome occuring. We specifically use this to model battles between territories, which have multiple possible outcomes which are determined probabilistically by dice rolls. The heuristic function we use is simply the number of territories owned by the max player, and the depth we use for minimax evaluation is 4 attacking turns.
 
 To make our AI more computationally tractable we made the following simplifications:
-    Only model 2 player Risk
-    Players can only attack once per turn
-    The reinforcing strategy is fixed, specifically it evenly distributes reinforcements among territories that border enemy territories
-    Once a player decides to attack a territory, they continue doing so until they win, lose, or they are less likely to win than lose
+
+* Only model 2 player Risk
+* Players can only attack once per turn
+* The reinforcing strategy is fixed, specifically it evenly distributes reinforcements among territories that border enemy territories
+* Once a player decides to attack a territory, they continue doing so until they win, lose, or they are less likely to win than lose
 
 #### Tools and Technologies
 We wrote the entirety of our program in C++11 and used OpenMP for the parallelism. We targeted the GHC machines.
